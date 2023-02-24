@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: php_deploy
+  labels:
+    name: php_deploy
+spec:
+  clusterIP: None
+  selector:
+    app: php_deploy
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
