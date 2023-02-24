@@ -30,7 +30,7 @@ spec:
             initialDelaySeconds: 10
             failureThreshold: 15
             periodSeconds: 10
-          image: IMAGE
+          image: 293115203530.dkr.ecr.us-east-1.amazonaws.com/php_deploy:LATEST
           resources:
             requests:
               memory: "3200Mi"
