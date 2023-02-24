@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: php_deploy
+  name: php-deploy
 spec:
   ports:
     - protocol: TCP
