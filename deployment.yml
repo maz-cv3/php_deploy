@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: php_deploy
+  name: php-deploy
   labels:
-    name: php_deploy
+    name: php-deploy
 spec:
   podManagementPolicy: Parallel
-  serviceName: php_deploy
+  serviceName: php-deploy
   replicas: 2
   template:
     metadata:
       labels:
-        app: php_deploy
+        app: php-deploy
     spec:
       containers:
-        - name: php_deploy
+        - name: php-deploy
           livenessProbe:
             httpGet:
               path: /
