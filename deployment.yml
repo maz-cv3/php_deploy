@@ -3,10 +3,12 @@ kind: Deployment
 metadata:
   name: php-deploy
   labels:
-    name: php-deploy
+    app: php-deploy
 spec:
-  serviceName: php-deploy
-  replicas: 2
+  replicas: 3
+  selector:
+    matchLabels:
+      app: php-deploy
   template:
     metadata:
       labels:
