@@ -5,7 +5,6 @@ metadata:
   labels:
     name: php-deploy
 spec:
-  podManagementPolicy: Parallel
   serviceName: php-deploy
   replicas: 2
   template:
