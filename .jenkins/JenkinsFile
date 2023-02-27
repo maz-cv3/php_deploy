@@ -31,7 +31,7 @@ node () {
 
             aws ecr get-login-password --region us-east-1 |docker login --username AWS --password-stdin 293115203530.dkr.ecr.us-east-1.amazonaws.com
 
-            image="293115203530.dkr.ecr.us-east-1.amazonaws.com\/php_deploy\:${BUILD_NUMBER}"
+            image="293115203530.dkr.ecr.us-east-1.amazonaws.com/php_deploy:${BUILD_NUMBER}"
             docker build . -t 293115203530.dkr.ecr.us-east-1.amazonaws.com/php_deploy:${BUILD_NUMBER}
 
             docker push 293115203530.dkr.ecr.us-east-1.amazonaws.com/php_deploy:${BUILD_NUMBER}
