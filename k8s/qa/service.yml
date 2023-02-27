@@ -1,0 +1,21 @@
+# kind: Service
+# apiVersion: v1
+# metadata:
+#   name: php-deploy
+# spec:
+#   ports:
+#     - protocol: TCP
+#       port: 80
+#       targetPort: 80
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-deploy-qa
+spec:
+  type: LoadBalancer
+  selector:
+    app: php-deploy-qa
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
