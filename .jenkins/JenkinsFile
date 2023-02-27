@@ -25,8 +25,7 @@ node () {
 
     stage ('Build Docker Image From Code') {
         sh """
-            set -o pipefail
-            set -x
+            
             cd $WORKSPACE
 
             aws ecr get-login-password --region us-east-1 |docker login --username AWS --password-stdin 293115203530.dkr.ecr.us-east-1.amazonaws.com
@@ -42,8 +41,6 @@ node () {
 	stage ('Deploying App to QA for Suits') {
  			// Shell build step
         sh """ 
-            set -o pipefail
-            set -x
             cd $WORKSPACE
 
             sed -i s/LATEST/${BUILD_NUMBER}/g deployment.yml
@@ -58,8 +55,6 @@ node () {
 
     stage ('runing QA Suits') {
         sh """
-            set -o pipefail
-            set -x
             tester=`curl http://a497b7b1572e74e7e8a7ddc8a1738844-365667390.us-east-1.elb.amazonaws.com/ |grep -i version |wc -l`
             if [ ${tester} == 0 ]; then
                 echo "pass"
@@ -72,8 +67,7 @@ node () {
     stage ('Deploying App to Prod for Suits') {
 
         sh """ 
-            set -o pipefail
-            set -x
+            
             cd $WORKSPACE
 
             sed -i s/LATEST/${BUILD_NUMBER}/g deployment.yml
