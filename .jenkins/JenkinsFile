@@ -1,0 +1,91 @@
+// Powered by Infostretch 
+
+timestamps {
+properties([
+    parameters([
+        gitParameter(branch: '',
+                     branchFilter: 'origin/(.*)',
+                     defaultValue: '',
+                     description: '',
+                     name: 'tag',
+                     quickFilterEnabled: false,
+                     selectedValue: 'NONE',
+                     sortMode: 'NONE',
+                     tagFilter: '*',
+                     type: 'PT_BRANCH_TAG')
+    ])
+])
+
+node () {
+
+	stage ('Checkout the Deployed Release') {
+ 	    checkout([$class: 'GitSCM', branches: [[name: '$tag']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/maz-cv3/php_deploy.git']]]) 
+	}
+
+
+    stage ('Build Docker Image From Code') {
+        sh """
+            set -o pipefail
+            set -x
+            cd $WORKSPACE
+
+            aws ecr get-login-password --region us-east-1 |docker login --username AWS --password-stdin 293115203530.dkr.ecr.us-east-1.amazonaws.com
+
+            image="293115203530.dkr.ecr.us-east-1.amazonaws.com\/php_deploy\:${BUILD_NUMBER}"
+            docker build . -t 293115203530.dkr.ecr.us-east-1.amazonaws.com/php_deploy:${BUILD_NUMBER}
+
+            docker push 293115203530.dkr.ecr.us-east-1.amazonaws.com/php_deploy:${BUILD_NUMBER}
+        """
+    }
+
+
+	stage ('Deploying App to QA for Suits') {
+ 			// Shell build step
+        sh """ 
+            set -o pipefail
+            set -x
+            cd $WORKSPACE
+
+            sed -i s/LATEST/${BUILD_NUMBER}/g deployment.yml
+
+            aws eks --region us-east-1 update-kubeconfig --name php-app
+            kubectl apply -f ${WORKSPACE}/k8s/qa/service_qa.yml
+            kubectl apply -f ${WORKSPAC}/k8s/qa/deployment_qa.yml
+            kubectl rollout status deployment/php-deploy-qa
+
+        """ 
+	}
+
+    stage ('runing QA Suits') {
+        sh """
+            set -o pipefail
+            set -x
+            tester=$(curl http://a497b7b1572e74e7e8a7ddc8a1738844-365667390.us-east-1.elb.amazonaws.com/ |grep -i version |wc -l )
+            if [ ${tester} == 0 ]; then
+                echo "pass"
+            else
+                exit 1
+            fi
+        """
+    }
+
+    stage ('Deploying App to Prod for Suits') {
+
+        sh """ 
+            set -o pipefail
+            set -x
+            cd $WORKSPACE
+
+            sed -i s/LATEST/${BUILD_NUMBER}/g deployment.yml
+
+            aws eks --region us-east-1 update-kubeconfig --name php-app
+            kubectl apply -f ${WORKSPACE}/k8s/qa/service.yml
+            kubectl apply -f ${WORKSPAC}/k8s/qa/deployment.yml
+            kubectl rollout status deployment/php-deploy
+
+        """ 
+    }
+
+
+}
+}
