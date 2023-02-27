@@ -41,13 +41,13 @@ node () {
 	stage ('Deploying App to QA for Suits') {
  			// Shell build step
         sh """ 
-            cd $WORKSPACE
+        cd ${WORKSPACE}
 
             sed -i s/LATEST/${BUILD_NUMBER}/g deployment.yml
 
             aws eks --region us-east-1 update-kubeconfig --name php-app
             kubectl apply -f ${WORKSPACE}/k8s/qa/service_qa.yml
-            kubectl apply -f ${WORKSPAC}/k8s/qa/deployment_qa.yml
+            kubectl apply -f ${WORKSPACE}/k8s/qa/deployment_qa.yml
             kubectl rollout status deployment/php-deploy-qa
 
         """ 
@@ -68,13 +68,13 @@ node () {
 
         sh """ 
             
-            cd $WORKSPACE
+            cd ${WORKSPACE}
 
             sed -i s/LATEST/${BUILD_NUMBER}/g deployment.yml
 
             aws eks --region us-east-1 update-kubeconfig --name php-app
             kubectl apply -f ${WORKSPACE}/k8s/qa/service.yml
-            kubectl apply -f ${WORKSPAC}/k8s/qa/deployment.yml
+            kubectl apply -f ${WORKSPACE}/k8s/qa/deployment.yml
             kubectl rollout status deployment/php-deploy
 
         """ 
