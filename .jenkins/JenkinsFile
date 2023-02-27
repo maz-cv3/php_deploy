@@ -60,7 +60,7 @@ node () {
         sh """
             set -o pipefail
             set -x
-            tester=$(curl http://a497b7b1572e74e7e8a7ddc8a1738844-365667390.us-east-1.elb.amazonaws.com/ |grep -i version |wc -l )
+            tester=`curl http://a497b7b1572e74e7e8a7ddc8a1738844-365667390.us-east-1.elb.amazonaws.com/ |grep -i version |wc -l`
             if [ ${tester} == 0 ]; then
                 echo "pass"
             else
