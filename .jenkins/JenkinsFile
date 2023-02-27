@@ -43,7 +43,7 @@ node () {
         sh """ 
         cd ${WORKSPACE}
 
-            sed -i s/LATEST/${BUILD_NUMBER}/g deployment.yml
+            sed -i s/LATEST/${BUILD_NUMBER}/g ${WORKSPACE}/k8s/qa/deployment_qa.yml
 
             aws eks --region us-east-1 update-kubeconfig --name php-app
             kubectl apply -f ${WORKSPACE}/k8s/qa/service_qa.yml
@@ -70,11 +70,11 @@ node () {
             
             cd ${WORKSPACE}
 
-            sed -i s/LATEST/${BUILD_NUMBER}/g deployment.yml
+            sed -i s/LATEST/${BUILD_NUMBER}/g ${WORKSPACE}/k8s/prod/deployment.yml
 
             aws eks --region us-east-1 update-kubeconfig --name php-app
-            kubectl apply -f ${WORKSPACE}/k8s/qa/service.yml
-            kubectl apply -f ${WORKSPACE}/k8s/qa/deployment.yml
+            kubectl apply -f ${WORKSPACE}/k8s/prod/service.yml
+            kubectl apply -f ${WORKSPACE}/k8s/prod/deployment.yml
             kubectl rollout status deployment/php-deploy
 
         """ 
