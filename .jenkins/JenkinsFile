@@ -56,7 +56,7 @@ node () {
     stage ('runing QA Suits') {
         sh """
             tester=`curl http://a497b7b1572e74e7e8a7ddc8a1738844-365667390.us-east-1.elb.amazonaws.com/ |grep -i version |wc -l`
-            if [ ${tester} == 0 ]; then
+            if [ \${tester} == 0 ]; then
                 echo "pass"
             else
                 exit 1
