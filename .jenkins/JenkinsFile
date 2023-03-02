@@ -55,7 +55,7 @@ node () {
 
     stage ('runing QA Suits') {
         sh """
-            dns=`kubectl get services php-deploy-qa -o json |jq '.status.loadBalancer.ingress[0].hostname'|tr -d'\"'`
+            dns=`kubectl get services php-deploy-qa -o json |jq '.status.loadBalancer.ingress[0].hostname'|tr -d '\"'`
 
             tester=`curl http://\${dns}/ |grep -i version |wc -l`
             if [ \${tester} = 1 ]; then
