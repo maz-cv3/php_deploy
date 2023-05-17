@@ -1,3 +1,10 @@
-FROM php:7.0-apache
+FROM php:8.1-apache
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
 COPY src/ /var/www/html
+WORKDIR /var/www/html
+
+RUN composer require sentry/sdk
+
 EXPOSE 80
