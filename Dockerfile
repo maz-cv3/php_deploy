@@ -1,6 +1,6 @@
 FROM php:8.1-apache
-RUN yum update -y 
-RUN yum install -y zip unzip
+RUN apt update -y 
+RUN apt install -y zip unzip
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
